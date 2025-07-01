@@ -1,2 +1,2 @@
-# HFR
+# Homodesmotic Family Reactions
 HFR uses Integer Linear Programming using RDKit and PuLP to automate the construction of Homodesmotic family reactions. Program is written in Python and made to run in command-line terminal. Each level is constructed using the core.py. HFR and MHFR are core.py interfaces with different input and output options. HFR has 'view', 'write', and 'count' options that can construct, write into a .com file, and count variables for given level of a homodesmotic family reaction. MHFR takes a file input with integer levels 1-4 and smiles and writes each reaction in the outfile.
