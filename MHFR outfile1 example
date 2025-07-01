@@ -1,0 +1,157 @@
+INPUT: CCO LEVEL: Isogyric STATUS: Optimal
+REACTANTS:
+-2*[H][H]
+-1*[H]OC([H])([H])C([H])([H])[H]
+
+PRODUCTS:
+-2*[H]C([H])([H])[H]
+-1*[H]O[H]
+
+INPUT: C=O LEVEL: Isodesmic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])=O
+
+PRODUCTS:
+-1*[H]C([H])=O
+
+INPUT: CC(C)O LEVEL: Hypohomodesmotic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])([H])C([H])([H])[H]
+-1*[H]N=C([H])[H]
+-1*[H]OC([H])(C([H])([H])[H])C([H])([H])[H]
+
+PRODUCTS:
+-1*[H]C([H])([H])C([H])([H])C([H])([H])[H]
+-1*[H]OC([H])([H])[H]
+-1*[H]N=C([H])C([H])([H])[H]
+
+INPUT: CCCBr LEVEL: Homodesmotic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])([H])C([H])([H])[H]
+-1*[H]C([H])([H])C([H])([H])C([H])([H])Br
+
+PRODUCTS:
+-1*[H]C([H])([H])C([H])([H])C([H])([H])[H]
+-1*[H]C([H])([H])C([H])([H])Br
+
+INPUT: c1ccccc1 LEVEL: Isogyric STATUS: Optimal
+REACTANTS:
+-9*[H][H]
+-1*[H]C1=C([H])C([H])=C([H])C([H])=C1[H]
+
+PRODUCTS:
+-6*[H]C([H])([H])[H]
+
+INPUT: COC LEVEL: Isodesmic STATUS: Optimal
+REACTANTS:
+-1*[H]O[H]
+-1*[H]C([H])([H])OC([H])([H])[H]
+
+PRODUCTS:
+-2*[H]OC([H])([H])[H]
+
+INPUT: CC(=O)O LEVEL: Hypohomodesmotic STATUS: Optimal
+REACTANTS:
+-1*[H]OC(=O)C([H])([H])[H]
+
+PRODUCTS:
+-1*[H]OC(=O)C([H])([H])[H]
+
+INPUT: NC(=O)C LEVEL: Homodesmotic STATUS: Optimal
+REACTANTS:
+-1*[H]N([H])C(=O)C([H])([H])[H]
+
+PRODUCTS:
+-1*[H]N([H])C(=O)C([H])([H])[H]
+
+INPUT: C#N LEVEL: Isogyric STATUS: Optimal
+REACTANTS:
+-3*[H][H]
+-1*[H]C#N
+
+PRODUCTS:
+-1*[H]C([H])([H])[H]
+-1*[H]N([H])[H]
+
+INPUT: CCCl LEVEL: Isodesmic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])([H])[H]
+-1*[H]C([H])([H])C([H])([H])Cl
+
+PRODUCTS:
+-1*[H]C([H])([H])C([H])([H])[H]
+-1*[H]C([H])([H])Cl
+
+INPUT: CC(C)C LEVEL: Hypohomodesmotic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])([H])C([H])(C([H])([H])[H])C([H])([H])[H]
+
+PRODUCTS:
+-1*[H]C([H])([H])C([H])(C([H])([H])[H])C([H])([H])[H]
+
+INPUT: C1=CC=CN=C1 LEVEL: Homodesmotic STATUS: Optimal
+REACTANTS:
+-3*[H]C([H])=C([H])[H]
+-1*[H]C1=NC([H])=C([H])C([H])=C1[H]
+
+PRODUCTS:
+-2*[H]C([H])=C([H])C([H])=C([H])[H]
+-1*[H]C([H])=NC([H])=C([H])[H]
+
+INPUT: CC(C)=O LEVEL: Isogyric STATUS: Optimal
+REACTANTS:
+-4*[H][H]
+-1*[H]C([H])([H])C(=O)C([H])([H])[H]
+
+PRODUCTS:
+-3*[H]C([H])([H])[H]
+-1*[H]O[H]
+
+INPUT: OC=O LEVEL: Isodesmic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])([H])[H]
+-1*[H]OC([H])=O
+
+PRODUCTS:
+-1*[H]OC([H])([H])[H]
+-1*[H]C([H])=O
+
+INPUT: C1=CC=C(C=C1)C=O LEVEL: Homodesmotic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])=C([H])C([H])([H])[H]
+-3*[H]C([H])=C([H])[H]
+-1*[H]C(=O)C1=C([H])C([H])=C([H])C([H])=C1[H]
+
+PRODUCTS:
+-1*[H]C(=O)C(=C([H])[H])C([H])([H])[H]
+-3*[H]C([H])=C([H])C([H])=C([H])[H]
+
+INPUT: C1=CC=CC=C1O LEVEL: Isodesmic STATUS: Optimal
+REACTANTS:
+-7*[H]C([H])([H])[H]
+-1*[H]OC1=C([H])C([H])=C([H])C([H])=C1[H]
+
+PRODUCTS:
+-3*[H]C([H])=C([H])[H]
+-3*[H]C([H])([H])C([H])([H])[H]
+-1*[H]OC([H])([H])[H]
+
+INPUT: CC(C(=O)O)N LEVEL: Hypohomodesmotic STATUS: Optimal
+REACTANTS:
+-1*[H]C([H])([H])C([H])([H])[H]
+-1*[H]OC(=O)C([H])(N([H])[H])C([H])([H])[H]
+
+PRODUCTS:
+-1*[H]N([H])C([H])(C([H])([H])[H])C([H])([H])[H]
+-1*[H]OC(=O)C([H])([H])[H]
+
+INPUT: CC(=O)OC1=CC=CC=C1C(=O)O LEVEL: Homodesmotic STATUS: Optimal
+REACTANTS:
+-3*[H]C([H])=C([H])[H]
+-2*[H]OC([H])=O
+-1*[H]OC(=O)C1=C([H])C([H])=C([H])C([H])=C1OC(=O)C([H])([H])[H]
+
+PRODUCTS:
+-1*[H]C([H])=C([H])C(=C([H])[H])C([H])([H])[H]
+-3*[H]OC(=O)C([H])=C([H])[H]
+-1*[H]C(=O)OC([H])=C([H])[H]
