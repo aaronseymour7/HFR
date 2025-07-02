@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 import argparse
 from rdkit import Chem
@@ -11,7 +12,9 @@ from itertools import combinations
 from AaronTools.geometry import Geometry
 from AaronTools.atoms import Atom
 from AaronTools.theory import Theory, OptimizationJob, FrequencyJob
+from AaronTools.fileIO import FileWriter
 from core import Isogyric, Isodesmic, Hypohomodesmotic, Homodesmotic
+
 
 def isogyric_count(mol):
     atom_counts = {}
@@ -139,7 +142,7 @@ def geom_from_rdkit(rdkitmol):
     return Geometry(atom_list)
 method = Theory(
     method="B3LYP",
-    basis="def2-SVP",
+    basis="6-31G(d)",
     job_type=[OptimizationJob(), FrequencyJob()]
 )
 
@@ -197,7 +200,7 @@ parser.add_argument("--lhs", nargs="+", type=str, help="LHS required molecules (
 parser.add_argument("--rhs", nargs="+", type=str, help="RHS required molecules (SMILES or comma-separated list)")
 parser.add_argument("--substruct", nargs="+", type=str, help="Substructures to replace (SMILES or list)")
 parser.add_argument("--replacement", nargs="+", type=str, help="Replacement structures (SMILES or list)")
-
+parser.add_argument("--outfolder", type=str, default=None, help="Output folder to write files for the 'write' action.")
 args = parser.parse_args()
 
 input_smiles = str(args.input)  
@@ -209,6 +212,7 @@ lhs_required = parse_smiles_list(args.lhs) if args.lhs else None
 rhs_required = parse_smiles_list(args.rhs) if args.rhs else None
 Substruct = parse_smiles_list(args.substruct) if args.substruct else None
 Replacement = parse_smiles_list(args.replacement) if args.replacement else None
+Outfolder = args.outfolder
 
 reaction_fn = reaction_map[args.reaction_type.lower()]
 
@@ -217,23 +221,38 @@ rhs, lhs, status = reaction_fn(input_mol, lhs_required, rhs_required, Substruct,
 if status == 'Optimal':
     Li = 1
     Ri = 1
-    if args.action_type  == 'write':
-        print("-----------Reactants-----------")
-        for mol, coeff in lhs:
-            geom = geom_from_rdkit(mol)
-            name = Chem.MolToSmiles(mol)
-            outfile = f"R{Li}_{coeff}.com"
-            print(f"({coeff})*{name} = {outfile}")
-            geom.write(outfile=outfile, theory=method)
-            Li+=1
-        print("-----------Products-----------")
-        for mol, coeff in rhs:
-            geom = geom_from_rdkit(mol)
-            name = Chem.MolToSmiles(mol)
-            outfile = f"P{Ri}_{coeff}.com"
-            print(f"({coeff})*{name} = {outfile}")
-            geom.write(outfile=outfile, theory=method)
-            Ri+=1
+    if args.action_type == 'write':
+        if args.outfolder is None:
+            parser.error("The --outfolder argument is required when action_type is 'write'.")
+        else:
+            outfolder = args.outfolder
+            os.makedirs(Outfolder, exist_ok=True)
+            print("-----------Reactants-----------")
+            for mol, coeff in lhs:
+                geom = geom_from_rdkit(mol)
+                name = Chem.MolToSmiles(mol)
+                outfile = os.path.join(Outfolder, f"R{Li}_{coeff}.com")
+                print(f"({coeff})*{name} = R{Li}_{coeff}.com")
+                FileWriter.write_file(
+                    geom=geom,
+                    style= "com",          
+                    outfile=outfile,
+                    theory=method            
+                )
+                Li+=1
+            print("-----------Products-----------")
+            for mol, coeff in rhs:
+                geom = geom_from_rdkit(mol)
+                name = Chem.MolToSmiles(mol)
+                outfile = os.path.join(Outfolder, f"P{Ri}_{coeff}.com")
+                print(f"({coeff})*{name} = P{Ri}_{coeff}.com")
+                FileWriter.write_file(
+                    geom=geom,
+                    style= "com",         
+                    outfile=outfile,
+                    theory=method           
+                )
+                Ri+=1
     if args.action_type  == 'view':
         print("-----------Reactants-----------")
         for mol, coeff in lhs:
@@ -245,6 +264,7 @@ if status == 'Optimal':
             name = Chem.MolToSmiles(mol)
             print(f"({coeff})*{name}")
             Ri+=1
+        
     elif args.action_type  == 'count':
         display_reaction_counts(input_mol, reaction_fn)
     print("Complete")
