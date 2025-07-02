@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+
+import glob
+import re
+import sys
+from AaronTools.fileIO import FileReader
+
+def get_B(filename):
+
+    base = filename.replace(".log", "")  # "P4_2"
+
+    part1 = base.split("_")[0]  # "P4"
+
+    # Step 3: Extract B by removing the first letter (A)
+    B_str = part1[1:]  # remove first char "P" -> "4"
+
+    return int(B_str)
+
+
+
+def extract_coeff_and_type(filename):
+    """
+    Extract product/reactant type (P or R) and coefficient from filename.
+    Assumes filename format like 'P1_2.log' or 'R3_1.log'
+    """
+    # Example: P1_2.log  --> type=P, coeff=2
+    # Regex explanation:
+    # ^([PR])\d+_(\d+)\.log$
+    pattern = re.compile(r"^([PR])\d+_(\d+)\.log$")
+    m = pattern.match(filename)
+    if not m:
+        print(f"Warning: filename {filename} does not match expected pattern.")
+        return None, None
+    mol_type = m.group(1)  # 'P' or 'R'
+    coeff = int(m.group(2))
+    return mol_type, coeff
+
+def get_free_energy(logfile):
+    try:
+        reader = FileReader(logfile, just_geom=False)
+        energy = None
+        if 'free_energy' in reader.keys():
+            energy = reader['free_energy']
+        elif 'energy' in reader.keys():
+            energy = reader['energy']
+        else:
+            print(f"Warning: No free_energy or energy found in {logfile}.")
+            return None
+        return energy
+    except Exception as e:
+        print(f"Error reading {logfile}: {e}")
+        return None
+
+def main():
+    log_files = glob.glob("*.log")
+    log_files.sort(key=get_B)
+    if not log_files:
+        print("No .log files found in current directory.")
+        sys.exit(1)
+    products = []
+    reactants = []
+
+    for f in log_files:
+        if f.startswith("P"):
+            products.append(f)
+        elif f.startswith("R"):
+            reactants.append(f)
+
+    # Sort reactants so the last one is last in list
+    reactants.sort()
+    # Remove last reactant from calculation (the unknown)
+    reactants_to_use = reactants[:-1]
+    total_products = 0.0
+    total_reactants = 0.0
+    for f in products:
+        mol_type, coeff = extract_coeff_and_type(f)
+        if mol_type is None or coeff is None:
+            continue
+
+        energy = get_free_energy(f)
+        if energy is None:
+            continue
+
+        energy_scaled = energy * coeff
+        print(f"{f}: type={mol_type}, coeff={coeff}, energy={energy:.6f} Eh, scaled_energy={energy_scaled:.6f} Eh")
+
+        total_products += energy_scaled
+    for f in reactants_to_use:
+        mol_type, coeff = extract_coeff_and_type(f)
+        if mol_type is None or coeff is None:
+            continue
+        energy = get_free_energy(f)
+        if energy is None:
+            continue
+        energy_scaled = energy * coeff
+        print(f"{f}: type={mol_type}, coeff={coeff}, energy={energy:.6f} Eh, scaled_energy={energy_scaled:.6f} Eh")
+        total_reactants += energy_scaled
+
+    deltaG = total_products - total_reactants
+    kj = deltaG* 2625.5
+    print("\n=== Summary ===")
+    print(f"Sum Products Energy (Eh): {total_products:.6f}")
+    print(f"Sum Reactants Energy (Eh): {total_reactants:.6f}")
+    print(f"Delta G (Products - Reactants) (Eh): {deltaG:.6f}")
+    print(f"Delta G (kJ/mol): {kj:.6f}")
+if __name__ == "__main__":
+    main()
