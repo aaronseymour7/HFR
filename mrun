@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+
+import glob
+import os
+import csv
+from run_folder import run_folder  # Make sure run_folder is defined in run_folder.py
+def main():
+    results = []
+    cwd = os.getcwd()
+
+    for mhfr_file in sorted(glob.glob("*.mhfr"), key=lambda x: int(x.split(".")[0])):
+        folder = mhfr_file
+        print(f"Checking folder: {folder} — isdir: {os.path.isdir(folder)}")
+        if os.path.isdir(folder):
+            print(f"Running folder: {folder}")
+            try:
+                result = run_folder(folder)
+                if result is not None:
+                    results.append(result)
+            except Exception as e:
+                print(f"Error processing {folder}: {e}")
+
+    with open("enthalpies_summary.csv", "w", newline="") as fout:
+        writer = csv.writer(fout)
+        writer.writerow(["SMILES","LEVEL","InChI", "ΔHf DFT (kcal/mol)", "ΔHf ATcT (kcal/mol)"])
+        writer.writerows(results)
+
+if __name__ == "__main__":
+    main()
+(base) ads09449@c4-20 bin$ cat mrun 
+#!/usr/bin/env python3
+
+import os
+import glob
+import sys
+from run import run
+
+def main():
+    cwd = os.getcwd()
+    mhfr_folders = [f for f in os.listdir(cwd) if f.endswith(".mhfr") and os.path.isdir(f)]
+
+    if not mhfr_folders:
+        print("No .mhfr folders found in current directory.")
+        sys.exit(1)
+
+    for folder in mhfr_folders:
+        print(f"Processing folder: {folder}")
+        os.chdir(folder)
+        try:
+            run()  # call the imported function here
+        except Exception as e:
+            print(f"Error running in folder {folder}: {e}")
+        finally:
+            os.chdir(cwd)
+
+if __name__ == "__main__":
+    main()
