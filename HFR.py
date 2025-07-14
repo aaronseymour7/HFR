@@ -140,9 +140,12 @@ def geom_from_rdkit(rdkitmol):
         positions = rdkitmol.GetConformer().GetAtomPosition(i)
         atom_list.append(Atom(element=atom.GetSymbol(), coords=positions))
     return Geometry(atom_list)
+
 method = Theory(
-    method="B3LYP",
-    basis="6-31G(d)",
+    method =  "M062X",
+    basis= "6-31G",
+    #method="B3LYP",
+    #basis="6-31G(d)",
     job_type=[OptimizationJob(), FrequencyJob()]
 )
 
@@ -226,33 +229,36 @@ if status == 'Optimal':
             parser.error("The --outfolder argument is required when action_type is 'write'.")
         else:
             outfolder = args.outfolder
-            os.makedirs(Outfolder, exist_ok=True)
-            print("-----------Reactants-----------")
-            for mol, coeff in lhs:
-                geom = geom_from_rdkit(mol)
-                name = Chem.MolToSmiles(mol)
-                outfile = os.path.join(Outfolder, f"R{Li}_{coeff}.com")
-                print(f"({coeff})*{name} = R{Li}_{coeff}.com")
-                FileWriter.write_file(
-                    geom=geom,
-                    style= "com",          
-                    outfile=outfile,
-                    theory=method            
-                )
-                Li+=1
-            print("-----------Products-----------")
-            for mol, coeff in rhs:
-                geom = geom_from_rdkit(mol)
-                name = Chem.MolToSmiles(mol)
-                outfile = os.path.join(Outfolder, f"P{Ri}_{coeff}.com")
-                print(f"({coeff})*{name} = P{Ri}_{coeff}.com")
-                FileWriter.write_file(
-                    geom=geom,
-                    style= "com",         
-                    outfile=outfile,
-                    theory=method           
-                )
-                Ri+=1
+            os.makedirs(outfolder, exist_ok=True)
+            index_file = os.path.join(outfolder, "index.txt")
+            with open(index_file, "w") as idx:
+                idx.write(f"Level:\t {reaction_fn.__name__}\n")
+                idx.write("Filename\tInChI\tSMILES\n")
+                print("-----------Reactants-----------")
+                for mol, coeff in lhs:
+                    geom = geom_from_rdkit(mol)
+                    smiles = Chem.MolToSmiles(mol)
+                    inchi = Chem.MolToInchi(mol)
+                    filename = f"R{Li}_{coeff}.com"
+                    name = f"R{Li}_{coeff}"
+                    outfile = os.path.join(outfolder, filename)
+                    print(f"({coeff})*{smiles} = {filename}")
+                    FileWriter.write_file(geom=geom, style="com", outfile=outfile, theory=method)
+                    idx.write(f"{name}\t{inchi}\t{smiles}\n")
+                    Li += 1
+
+                print("-----------Products-----------")
+                for mol, coeff in rhs:
+                    geom = geom_from_rdkit(mol)
+                    smiles = Chem.MolToSmiles(mol)
+                    inchi = Chem.MolToInchi(mol)
+                    filename = f"P{Ri}_{coeff}.com"
+                    name = f"P{Ri}_{coeff}"
+                    outfile = os.path.join(outfolder, filename)
+                    print(f"({coeff})*{smiles} = {filename}")
+                    FileWriter.write_file(geom=geom, style="com", outfile=outfile, theory=method)
+                    idx.write(f"{name}\t{inchi}\t{smiles}\n")
+                    Ri += 1
     if args.action_type  == 'view':
         print("-----------Reactants-----------")
         for mol, coeff in lhs:
