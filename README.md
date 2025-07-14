@@ -12,6 +12,4 @@ The core functionality is implemented in `core.py`. Both **HFR** and **MHFR** ar
 
 **Additional Tools**
 
-  - **compute_fe** works within the **HFR** `write` outfolder directory and extracts free energy calculations to determine the **HFR** `input_mol` free energy.
-
-  - **read.py** extracts and prints energies of input Gaussian `.log` file.
+  - 
